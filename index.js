@@ -20,6 +20,9 @@ morgan.format('custom-json', (tokens, req, res) => {
 
 app.use(morgan('custom-json'));
 
+//serve frontend build
+app.use(express.static('dist'));
+
 const persons = [
     { 
       "id": "1",
