@@ -1,0 +1,5 @@
+#environment varia
+.env
+
+node_modules/
+#dist

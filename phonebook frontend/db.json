@@ -1,0 +1,24 @@
+{
+  "persons": [
+    {
+      "id": "4c6b",
+      "name": "Justin Maina",
+      "number": "0769519090"
+    },
+    {
+      "id": "6476",
+      "name": "Mwendo",
+      "number": "0769519090"
+    },
+    {
+      "id": "ee6a",
+      "name": "Shivy",
+      "number": "07865434556"
+    },
+    {
+      "id": "3f19",
+      "name": "Bob",
+      "number": "0877545644"
+    }
+  ]
+}
