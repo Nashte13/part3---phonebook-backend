@@ -11,7 +11,7 @@ const url = `mongodb+srv://nash:${password}@cluster0.6xgmy0j.mongodb.net/?appNam
 
 mongoose.set('strictQuery', false)
 
-mongoose.connect(url, {family: 4})
+mongoose.connect(url, {family: 4}) //establishes connection to database
 
 const noteSchema = new mongoose.Schema({
     content: String,
@@ -26,6 +26,6 @@ const note = Note({
 })
 
 note.save().then(result => {
-    console.log('notesaved')
+    console.log('note saved')
     mongoose.connection.close()
 })
