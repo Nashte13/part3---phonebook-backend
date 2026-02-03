@@ -5,7 +5,7 @@
 }
 
 .notification.success {
-  color: green;
+  color: rgb(4, 161, 4);
   background: #e0ffe0;
   border: 2px solid green;
 }
