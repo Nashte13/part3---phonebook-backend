@@ -6,6 +6,8 @@ if (process.argv.length < 3) {
 }
 
 const password = process.argv[2]
+const name = process.argv[3]
+const number = process.argv[4]
 
 const url = `mongodb+srv://nash:${password}@cluster0.6xgmy0j.mongodb.net/phonebookApp?appName=Cluster0`
 
@@ -15,18 +17,30 @@ mongoose.connect(url, {family: 4}) //establishes connection to database
 
 const phonebookSchema = new mongoose.Schema({
     name: String,
-    number: Number,
+    number: String,
 })
 
 const Person = mongoose.model('Person', phonebookSchema)
 
-const person = new Person({
-    name: 'Nahashon Mwangi',
-    number: 715735827,
-})
-
-person.save().then(result => {
-    console.log('person saved')
-    mongoose.connection.close()
-})
-
+if (process.argv.length === 3) {
+    Person.find({}).then(result => {
+        console.log('Phonebook:')
+        result.forEach(person => {
+            console.log(person.name, person.number);
+        });
+        mongoose.connection.close()
+    });
+} else if (process.argv.length === 5) {
+    //adding a person in the command
+    const person = new Person({
+        name: name,
+        number: number,
+    });
+    person.save().then(() => {{
+        consol.log(`added ${name} ${number} to phonebook`);
+        mongoose.connection.close()
+    }});
+} else {
+    console.log('Usage: node mongo.js <password> [name, number]');
+    mongoose.connection.close();
+}
