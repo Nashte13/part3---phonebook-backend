@@ -32,6 +32,14 @@ const phonebookSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', phonebookSchema)
 
+phonebookSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject._v
+    }
+})
+
 
 //create custom morgan format
 morgan.format('custom-json', (tokens, req, res) => {
