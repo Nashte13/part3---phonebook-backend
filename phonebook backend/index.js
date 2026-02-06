@@ -51,7 +51,7 @@ app.get('/api/persons', (req, res) => {
 app.get('/info', (req, res) => {
     const date = new Date();
     res.send(`
-        <p>Phonebook has info for ${persons.length} people</p>
+        <p>Phonebook has info for ${Person.length} people</p>
         <p>${date}</p>
         `);
     
@@ -60,29 +60,31 @@ app.get('/info', (req, res) => {
 //adding a new person
 app.post('/api/persons', (req, res) => {
     const newPerson = req.body;
-    const existingPerson = persons.find(person => person.name === newPerson.name);
 
     if (!newPerson.name || !newPerson.number) {
         return res.status(400).json({
             error: 'name or number is missing'
         })
     }
-    
+
+    const existingPerson = Person.find(person => person.name === newPerson.name);
+
     if (existingPerson) {
         return res.status(400).json({
             error: 'name must be unique'
         })
     }
 
-    const person = {
-        id: generateId(),
+    const person = new Person({
         name: newPerson.name,
         number: newPerson.number
-    }
+    })
 
-    persons.push(person);
-    console.log(person);
-    res.json(person);
+    person.save().then(savedPerson => {
+        console.log(savedPerson);
+        res.json(savedPerson);
+    });
+    
 })
 
 //update a person number
