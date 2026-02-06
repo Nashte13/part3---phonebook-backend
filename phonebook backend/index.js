@@ -81,38 +81,44 @@ app.post("/api/persons",  (req, res) => {
 
 //update a person number
 app.put("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
   const newNumber = req.body.number;
-  const person = persons.find((person) => person.id === id);
-  if (person) {
+  Person.findById(req.params.id).then(person => {
+    if (person) {
     person.number = newNumber;
-    res.json(person);
+    person.save().then(updatedPerson =>{
+        res.json(person);
+    })
   } else {
     res.status(404).end();
   }
+  })
 });
 
 //getting a single person
 app.get("/api/persons/:id", (req, res) => {
   const id = req.params.id;
-  const person = persons.find((person) => person.id === id);
-  if (person) {
+  Person.findById(id).then(person => {
+    if (person) {
     res.json(person);
   } else {
     res.status(404).end();
   }
+  })
 });
 
 //deleting a person
 app.delete("/api/persons/:id", (req, res) => {
   const id = req.params.id;
-  const person = persons.find((person) => person.id === id);
-  if (person) {
-    persons.splice(persons.indexOf(person), 1);
+  Person.findByIdAndDelete(id).then(result => {
+     if (result) {
     res.status(204).end();
   } else {
     res.status(404).end();
   }
+  })
+  .catch(error => {
+    res.status(400).json({error: error.message});
+  })
 });
 
 const PORT = process.env.PORT;
