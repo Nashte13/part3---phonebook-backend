@@ -43,16 +43,18 @@ app.get("/api/persons", (req, res) => {
 });
 
 //info route
-app.get("/info", (req, res,) => {
-  const date = new Date();
-  res.send(`
-        <p>Phonebook has info for ${Person.length} people</p>
+app.get("/info", (req, res) => {
+  Person.countDocuments({}).then((count) => {
+    const date = new Date();
+    res.send(`
+        <p>Phonebook has info for ${count} people</p>
         <p>${date}</p>
         `);
+  });
 });
 
 //adding a new person
-app.post("/api/persons",  (req, res, next) => {
+app.post("/api/persons", (req, res, next) => {
   const newPerson = req.body;
 
   if (!newPerson.name || !newPerson.number) {
@@ -61,84 +63,90 @@ app.post("/api/persons",  (req, res, next) => {
     });
   }
 
-  Person.findOne({name: newPerson.name}).then(existingPerson =>{
-    if (existingPerson) {
-      return res.status(400).json({
-        error: "name must be unique",
+  Person.findOne({ name: newPerson.name })
+    .then((existingPerson) => {
+      if (existingPerson) {
+        return res.status(400).json({
+          error: "name must be unique",
+        });
+      }
+
+      const person = new Person({
+        name: newPerson.name,
+        number: newPerson.number,
       });
-    }
 
-    const person = new Person({
-      name: newPerson.name,
-      number: newPerson.number
-    });
-
-    person.save().then(savedPerson => {
-        res.json(savedPerson)
+      person.save().then((savedPerson) => {
+        res.json(savedPerson);
+      });
     })
-  })
-  .catch(error => next(error))
+    .catch((error) => next(error));
 });
 
 //update a person number
 app.put("/api/persons/:id", (req, res, next) => {
   const newNumber = req.body.number;
-  Person.findById(req.params.id).then(person => {
-    if (person) {
-    person.number = newNumber;
-    person.save().then(updatedPerson =>{
-        res.json(person);
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (person) {
+        person.number = newNumber;
+        person.save().then((updatedPerson) => {
+          res.json(person);
+        });
+      } else {
+        res.status(404).end();
+      }
     })
-  } else {
-    res.status(404).end();
-  }
-  })
-  .catch(error => next(error))
+    .catch((error) => next(error));
 });
 
 //getting a single person
 app.get("/api/persons/:id", (req, res, next) => {
   const id = req.params.id;
-  Person.findById(id).then(person => {
-    if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
-  })
-  .catch(error => next(error))
+  Person.findById(id)
+    .then((person) => {
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 //deleting a person
 app.delete("/api/persons/:id", (req, res, next) => {
   const id = req.params.id;
-  Person.findByIdAndDelete(id).then(result => {
-     if (result) {
-    res.status(204).end();
-  } else {
-    res.status(404).end();
-  }
-  })
-  .catch(error => next(error))
+  Person.findByIdAndDelete(id)
+    .then((result) => {
+      if (result) {
+        res.status(204).end();
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
-const unknownEndpoint = (req, res) => {{
-  res.status(404).send({error: 'unknown endpoint'})
-}}
+const unknownEndpoint = (req, res) => {
+  {
+    res.status(404).send({ error: "unknown endpoint" });
+  }
+};
 
-app.use(unknownEndpoint)
+app.use(unknownEndpoint);
 
 const errorHandler = (error, request, response, next) => {
-  console.log(error.message)
+  console.log(error.message);
 
-  if (error.message === 'castError') {
-    return res.status(404).send({error: 'malformatted id'})
+  if (error.message === "castError") {
+    return res.status(404).send({ error: "malformatted id" });
   }
 
-  next(error)
-}
+  next(error);
+};
 
-app.use(errorHandler)
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
