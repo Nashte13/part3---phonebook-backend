@@ -32,28 +32,6 @@ const phonebookSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', phonebookSchema)
 
-if (process.argv.length === 3) {
-    Person.find({}).then(result => {
-        console.log('Phonebook:')
-        result.forEach(person => {
-            console.log(person.name, person.number);
-        });
-        mongoose.connection.close()
-    });
-} else if (process.argv.length === 5) {
-    //adding a person in the command
-    const person = new Person({
-        name: name,
-        number: number,
-    });
-    person.save().then(() => {{
-        console.log(`added ${name} ${number} to phonebook`);
-        mongoose.connection.close()
-    }});
-} else {
-    console.log('Usage: node mongo.js <password> [name, number]');
-    mongoose.connection.close();
-}
 
 //create custom morgan format
 morgan.format('custom-json', (tokens, req, res) => {
@@ -109,7 +87,9 @@ const generateId = () => {
 
 //get all persons
 app.get('/api/persons', (req, res) => {
-    res.json(persons);
+    Person.find({}).then(persons => {
+         res.json(persons);
+    })
 })
 
 //info route
