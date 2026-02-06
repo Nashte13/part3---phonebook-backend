@@ -19,8 +19,8 @@ mongoose.connect(url, {family: 4}) //establishes connection to database
 .then(result => {
     console.log('Connected to MongoDB')
 })
-.catch(err => {
-    console.log('error connecting to mongoDB:', err.message)
+.catch(error => {
+    console.log('error connecting to mongoDB:', error.message)
 })
 
 const phonebookSchema = new mongoose.Schema({
