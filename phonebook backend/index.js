@@ -91,7 +91,7 @@ app.put("/api/persons/:id", (req, res, next) => {
       if (person) {
         person.number = newNumber;
         person.save().then((updatedPerson) => {
-          res.json(person);
+          res.json(updatedPerson);
         });
       } else {
         res.status(404).end();
