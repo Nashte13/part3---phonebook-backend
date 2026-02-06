@@ -52,29 +52,31 @@ app.get("/info", (req, res) => {
 });
 
 //adding a new person
-app.post("/api/persons", async (req, res) => {
-  const {name, number} = req.body;
+app.post("/api/persons",  (req, res) => {
+  const newPerson = req.body;
 
-  if (!name || !number) {
+  if (!newPerson.name || !newPerson.number) {
     return res.status(400).json({
       error: "name or number is missing",
     });
   }
 
-  const existingPerson = await Person.findOne({name});
-  if (existingPerson) {
+  Person.findOne({name: newPerson.name}).then(existingPerson =>{
+    if (existingPerson) {
       return res.status(400).json({
         error: "name must be unique",
       });
     }
 
     const person = new Person({
-      name,
-      number,
+      name: newPerson.name,
+      number: newPerson.number
     });
 
-    const savedPerson = await person.save();
-    res.json(savedPerson)
+    person.save().then(savedPerson => {
+        res.json(savedPerson)
+    })
+  })
 });
 
 //update a person number
