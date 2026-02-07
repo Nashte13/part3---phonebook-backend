@@ -71,7 +71,7 @@ const App = () => {
         }, 3000);
       })
       .catch((error) => {
-        console.error("Error adding contact;", error);
+        console.error("Error adding contact;", error.response.data.error);
         setNotification({ message: error.response.data.error, type: "error" });
         setTimeout(() => {
           setNotification({ message: null, type: null });
