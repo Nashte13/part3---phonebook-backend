@@ -139,10 +139,10 @@ app.use(unknownEndpoint);
 const errorHandler = (error, request, response, next) => {
   console.log(error.message);
 
-  if (error.message === "castError") {
-    return res.status(404).send({ error: "malformatted id" });
+  if (error.name === "castError") {
+    return res.status(400).send({ error: "malformatted id" });
   }else if (error.name === 'ValidationError') {
-    return res.status(404).json({error: error.message})
+    return res.status(400).json({error: error.message})
   }
 
   next(error);
