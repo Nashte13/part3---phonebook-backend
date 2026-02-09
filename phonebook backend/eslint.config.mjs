@@ -24,5 +24,9 @@ export default defineConfig([
       '@stylistic/js/quotes': ['error', 'single'],
       '@stylistic/js/semi': ['error', 'never'],
     }, 
-  }
+  },
+
+  { 
+    ignores: ['dist/**'], 
+  },
 ]);
